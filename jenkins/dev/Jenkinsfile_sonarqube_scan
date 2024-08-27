@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+    environment {
+        //NEXUS_DOCKER_REPO = '10.89.104.58:8085'
+        //NEXUS_DOCKER_REPO = '127.0.0.1:8082'
+        NEXUS_DOCKER_REPO = '127.0.0.1:8083'
+		SONAR_HOST_URL = 'http://192.168.1.8:9000'
+        SONAR_LOGIN_CRED = 'jenkins'
+		scannerHome = tool 'sonarqube'
+    }
+    
+     stages {
+	 
+		stage('SonarQube Scan') {
+            steps {
+			
+                withCredentials([string(credentialsId: "${SONAR_LOGIN_CRED}", variable: 'SONAR_LOGIN')]) {
+					
+                    withSonarQubeEnv('sonarqube') {
+                        sh '''
+                            # Prepare the SonarQube scanner
+                            ${scannerHome}/bin/sonar-scanner \
+                                -Dsonar.projectKey=adminweb \
+								-Dsonar.sources=src \
+								-Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+                                -Dsonar.host.url=$SONAR_HOST_URL \
+                                -Dsonar.login=$SONAR_LOGIN
+                        '''
+                    }
+                    timeout(time: 10, unit: 'MINUTES') {
+                        waitForQualityGate abortPipeline: true
+                    }
+                }
+				
+            }
+        }
+        
+    }
+}

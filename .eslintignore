@@ -1,0 +1,9 @@
+dist
+*.yaml
+node_modules/
+.vscode
+.husky
+.nvmrc
+scan
+public
+jenkins

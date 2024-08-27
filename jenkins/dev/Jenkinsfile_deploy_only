@@ -1,0 +1,49 @@
+pipeline {
+    agent any
+    environment {
+        //NEXUS_DOCKER_REPO = '10.89.104.58:8085'
+        //NEXUS_DOCKER_REPO = '127.0.0.1:8082'
+        NEXUS_DOCKER_REPO = '127.0.0.1:8083'
+		//DOCKER_BUILDKIT = '1'
+    }
+    
+     stages {
+        
+        stage('Docker Login') {
+            steps {
+                echo 'Nexus Docker Repository Login'
+                script{
+                    withCredentials([usernamePassword(credentialsId: '0fc130a5-c542-45bd-adcb-c82ee7fbcef7', usernameVariable: 'USER', passwordVariable: 'PASS' )]){
+                       sh ' echo $PASS | docker login -u admin -p P@ssw0rd $NEXUS_DOCKER_REPO'
+                    }
+                   
+                }
+            }
+        }
+		
+		stage('Docker Pull') {
+            steps {
+                script{
+                    withCredentials([usernamePassword(credentialsId: '0fc130a5-c542-45bd-adcb-c82ee7fbcef7', usernameVariable: 'USER', passwordVariable: 'PASS' )]){
+                        sh 'docker pull $NEXUS_DOCKER_REPO/adminweb:latest'
+                    }
+                }
+            }
+        }
+		
+		stage('Docker Deploy') {
+            steps {
+                script{
+                    withCredentials([usernamePassword(credentialsId: '0fc130a5-c542-45bd-adcb-c82ee7fbcef7', usernameVariable: 'USER', passwordVariable: 'PASS' )]){
+						sh 'docker-compose down || true'
+                        sh 'docker-compose up -d'
+                    }
+                }
+            }
+        }
+		
+
+
+        
+    }
+}

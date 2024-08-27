@@ -1,0 +1,33 @@
+import { UserItem } from './type';
+
+export const defaultDetailObj: UserItem = {
+  id: '',
+  displayName: '',
+  emailAddress: '',
+  emailGroup: '',
+  emailGroupLabel: '',
+  userRole: [],
+  userRoleLabel: [],
+  tenantName: '',
+  tenantNameLabel: '',
+  userStatus: '',
+  userStatusLabel: '',
+  accountStatus: '',
+  accountStatusLabel: '',
+  firstName: '',
+  lastName: '',
+  phoneNumber: 0,
+  faxNumber: 0,
+  location: '',
+  position: '',
+  rank: 0,
+  substantiveRank: '',
+  title: '',
+  unit: '',
+  requestBy: '',
+  requestTime: '',
+  approveBy: '',
+  approveTime: '',
+  rejectBy: '',
+  rejectTime: ''
+};

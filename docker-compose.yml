@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+
+  adminweb:
+    container_name: adminweb
+    #image: adminweb:latest
+    image: 127.0.0.1:8083/adminweb:latest
+    networks:
+      - sma_network
+
+    environment:
+      - serviceName=adminweb
+      - servicePort=3000
+      - projectName=adminweb
+      - REACT_SMA_APP_BACKEND_URL=http://10.89.104.58:3000
+      - REACT_SMA_APP_KEYCLOAK_URL=http://10.89.104.58:3000
+    entrypoint: ["pnpm", "run", "serve"]
+    restart: always
+  #admin-END#
+
+networks:
+  sma_network:
+    external: true
